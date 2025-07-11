@@ -17,6 +17,13 @@ const Auth: React.FC = () => {
     setLoading(true);
     setError('');
 
+    // Check if environment variables are set
+    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      setError('Database connection not configured. Please check environment variables.');
+      setLoading(false);
+      return;
+    }
+
     try {
       if (isSignUp) {
         const { error } = await signUp(email, password, name);

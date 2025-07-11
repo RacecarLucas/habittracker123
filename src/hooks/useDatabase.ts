@@ -14,6 +14,7 @@ export function useDatabase(userId: string | undefined) {
   const [moodEntries, setMoodEntries] = useState<MoodEntry[]>([]);
   const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Load data when user changes
   useEffect(() => {
@@ -38,6 +39,7 @@ export function useDatabase(userId: string | undefined) {
     if (!userId) return;
 
     setLoading(true);
+    setError(null);
     try {
       await Promise.all([
         loadHabits(),
@@ -47,6 +49,7 @@ export function useDatabase(userId: string | undefined) {
       ]);
     } catch (error) {
       console.error('Error loading data:', error);
+      setError(error instanceof Error ? error.message : 'Failed to load data');
     } finally {
       setLoading(false);
     }

@@ -13,6 +13,7 @@ import Profile from './components/Profile';
 
 function App() {
   const { user, loading: authLoading } = useAuth();
+  const [error, setError] = useState<string | null>(null);
   const {
     habits,
     userStats,
@@ -31,6 +32,18 @@ function App() {
 
   const [currentTab, setCurrentTab] = useState('dashboard');
 
+  // Debug logging
+  useEffect(() => {
+    console.log('App state:', {
+      user: user?.id,
+      authLoading,
+      dataLoading,
+      habitsCount: habits.length,
+      supabaseUrl: import.meta.env.VITE_SUPABASE_URL ? 'Set' : 'Missing',
+      supabaseKey: import.meta.env.VITE_SUPABASE_ANON_KEY ? 'Set' : 'Missing'
+    });
+  }, [user, authLoading, dataLoading, habits]);
+
   // Show loading screen while checking auth
   if (authLoading) {
     return (
@@ -46,6 +59,30 @@ function App() {
   // Show auth screen if not logged in
   if (!user) {
     return <Auth />;
+  }
+
+  // Show error if environment variables are missing
+  if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-full max-w-md text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-red-600 text-2xl">⚠️</span>
+          </div>
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Configuration Error</h1>
+          <p className="text-gray-600 mb-4">
+            Supabase environment variables are missing. Please set up your database connection.
+          </p>
+          <div className="text-left bg-gray-50 p-4 rounded-lg text-sm">
+            <p className="font-medium mb-2">Required environment variables:</p>
+            <ul className="space-y-1 text-gray-600">
+              <li>• VITE_SUPABASE_URL</li>
+              <li>• VITE_SUPABASE_ANON_KEY</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Update current streak based on habit completions
