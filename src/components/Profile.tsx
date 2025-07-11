@@ -5,19 +5,13 @@ import { User, Award, Target, Flame, Calendar, Settings, Trash2 } from 'lucide-r
 interface ProfileProps {
   userStats: UserStats;
   habits: Habit[];
-  setHabits: (habits: Habit[]) => void;
-  setUserStats: (stats: UserStats) => void;
-  setPurchasedItems: (items: string[]) => void;
-  setMoodEntries: (entries: any[]) => void;
+  onResetData: () => void;
 }
 
 const Profile: React.FC<ProfileProps> = ({ 
   userStats, 
   habits, 
-  setHabits, 
-  setUserStats, 
-  setPurchasedItems, 
-  setMoodEntries 
+  onResetData
 }) => {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [userName, setUserName] = useState(localStorage.getItem('userName') || 'User');
@@ -29,15 +23,7 @@ const Profile: React.FC<ProfileProps> = ({
   };
 
   const handleResetData = () => {
-    setHabits([]);
-    setUserStats({
-      totalCoins: 0,
-      totalHabitsCompleted: 0,
-      currentStreak: 0,
-      level: 1
-    });
-    setPurchasedItems([]);
-    setMoodEntries([]);
+    onResetData();
     setShowResetConfirm(false);
   };
 

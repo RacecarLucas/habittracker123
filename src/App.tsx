@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Habit, UserStats, MoodEntry } from './types';
-import { useLocalStorage } from './hooks/useLocalStorage';
+import { useAuth } from './hooks/useAuth';
+import { useDatabase } from './hooks/useDatabase';
 import { formatDate } from './utils/dateUtils';
+import Auth from './components/Auth';
 import Navigation from './components/Navigation';
 import Dashboard from './components/Dashboard';
 import HabitsManager from './components/HabitsManager';
@@ -11,16 +12,41 @@ import ExportData from './components/ExportData';
 import Profile from './components/Profile';
 
 function App() {
+  const { user, loading: authLoading } = useAuth();
+  const {
+    habits,
+    userStats,
+    moodEntries,
+    purchasedItems,
+    loading: dataLoading,
+    saveHabit,
+    updateHabit,
+    deleteHabit,
+    toggleHabitCompletion,
+    updateUserStats,
+    saveMoodEntry,
+    purchaseItem,
+    refreshData
+  } = useDatabase(user?.id);
+
   const [currentTab, setCurrentTab] = useState('dashboard');
-  const [habits, setHabits] = useLocalStorage<Habit[]>('habits', []);
-  const [userStats, setUserStats] = useLocalStorage<UserStats>('userStats', {
-    totalCoins: 0,
-    totalHabitsCompleted: 0,
-    currentStreak: 0,
-    level: 1
-  });
-  const [purchasedItems, setPurchasedItems] = useLocalStorage<string[]>('purchasedItems', []);
-  const [moodEntries, setMoodEntries] = useLocalStorage<MoodEntry[]>('moodEntries', []);
+
+  // Show loading screen while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show auth screen if not logged in
+  if (!user) {
+    return <Auth />;
+  }
 
   // Update current streak based on habit completions
   useEffect(() => {
@@ -53,13 +79,23 @@ function App() {
       }
     }
     
-    setUserStats(prev => ({
-      ...prev,
+    updateUserStats({
       currentStreak
-    }));
-  }, [habits, setUserStats]);
+    });
+  }, [habits, updateUserStats]);
 
   const renderCurrentTab = () => {
+    if (dataLoading) {
+      return (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading your data...</p>
+          </div>
+        </div>
+      );
+    }
+
     switch (currentTab) {
       case 'dashboard':
         return <Dashboard habits={habits} userStats={userStats} />;
@@ -67,25 +103,27 @@ function App() {
         return (
           <HabitsManager 
             habits={habits} 
-            setHabits={setHabits} 
+            onSaveHabit={saveHabit}
+            onUpdateHabit={updateHabit}
+            onDeleteHabit={deleteHabit}
+            onToggleCompletion={toggleHabitCompletion}
             userStats={userStats} 
-            setUserStats={setUserStats} 
+            onUpdateStats={updateUserStats}
           />
         );
       case 'shop':
         return (
           <Shop 
             userStats={userStats} 
-            setUserStats={setUserStats} 
+            onPurchaseItem={purchaseItem}
             purchasedItems={purchasedItems} 
-            setPurchasedItems={setPurchasedItems} 
           />
         );
       case 'mood':
         return (
           <MoodTracker 
             moodEntries={moodEntries} 
-            setMoodEntries={setMoodEntries} 
+            onSaveMoodEntry={saveMoodEntry}
           />
         );
       case 'export':
@@ -101,10 +139,7 @@ function App() {
           <Profile 
             userStats={userStats} 
             habits={habits} 
-            setHabits={setHabits} 
-            setUserStats={setUserStats} 
-            setPurchasedItems={setPurchasedItems} 
-            setMoodEntries={setMoodEntries} 
+            onResetData={refreshData}
           />
         );
       default:

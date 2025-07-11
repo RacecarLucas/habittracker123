@@ -5,16 +5,22 @@ import { Plus, Edit2, Trash2, CheckCircle, Circle, Flame, Target, Calendar } fro
 
 interface HabitsManagerProps {
   habits: Habit[];
-  setHabits: (habits: Habit[]) => void;
+  onSaveHabit: (habit: Omit<Habit, 'id' | 'createdAt' | 'completedDates' | 'streak' | 'longestStreak'>) => void;
+  onUpdateHabit: (habitId: string, updates: Partial<Habit>) => void;
+  onDeleteHabit: (habitId: string) => void;
+  onToggleCompletion: (habitId: string, date: string) => void;
   userStats: any;
-  setUserStats: (stats: any) => void;
+  onUpdateStats: (stats: any) => void;
 }
 
 const HabitsManager: React.FC<HabitsManagerProps> = ({ 
   habits, 
-  setHabits, 
+  onSaveHabit,
+  onUpdateHabit,
+  onDeleteHabit,
+  onToggleCompletion,
   userStats, 
-  setUserStats 
+  onUpdateStats
 }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
@@ -31,26 +37,17 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
     
     if (editingHabit) {
       // Update existing habit
-      setHabits(habits.map(habit => 
-        habit.id === editingHabit.id 
-          ? { ...habit, ...formData }
-          : habit
-      ));
+      onUpdateHabit(editingHabit.id, formData);
       setEditingHabit(null);
     } else {
       // Add new habit
-      const newHabit: Habit = {
-        id: Date.now().toString(),
+      const newHabit = {
         name: formData.name,
         description: formData.description,
         priority: formData.priority,
-        createdAt: new Date(),
-        completedDates: [],
-        streak: 0,
-        longestStreak: 0,
         coinsPerCompletion: formData.priority === 'high' ? 30 : formData.priority === 'medium' ? 20 : 10
       };
-      setHabits([...habits, newHabit]);
+      onSaveHabit(newHabit);
     }
     
     setFormData({ name: '', description: '', priority: 'medium' });
@@ -68,51 +65,11 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
   };
 
   const handleDelete = (habitId: string) => {
-    setHabits(habits.filter(habit => habit.id !== habitId));
+    onDeleteHabit(habitId);
   };
 
   const toggleHabitCompletion = (habitId: string) => {
-    setHabits(habits.map(habit => {
-      if (habit.id !== habitId) return habit;
-      
-      const isCompleted = habit.completedDates.includes(today);
-      let newCompletedDates;
-      let newStreak = habit.streak;
-      let newLongestStreak = habit.longestStreak;
-      
-      if (isCompleted) {
-        // Remove completion
-        newCompletedDates = habit.completedDates.filter(date => date !== today);
-        newStreak = Math.max(0, habit.streak - 1);
-        
-        // Update coins
-        setUserStats((prev: any) => ({
-          ...prev,
-          totalCoins: prev.totalCoins - habit.coinsPerCompletion,
-          totalHabitsCompleted: prev.totalHabitsCompleted - 1
-        }));
-      } else {
-        // Add completion
-        newCompletedDates = [...habit.completedDates, today];
-        newStreak = habit.streak + 1;
-        newLongestStreak = Math.max(habit.longestStreak, newStreak);
-        
-        // Update coins
-        setUserStats((prev: any) => ({
-          ...prev,
-          totalCoins: prev.totalCoins + habit.coinsPerCompletion,
-          totalHabitsCompleted: prev.totalHabitsCompleted + 1,
-          level: Math.floor((prev.totalHabitsCompleted + 1) / 10) + 1
-        }));
-      }
-      
-      return {
-        ...habit,
-        completedDates: newCompletedDates,
-        streak: newStreak,
-        longestStreak: newLongestStreak
-      };
-    }));
+    onToggleCompletion(habitId, today);
   };
 
   const getPriorityColor = (priority: string) => {

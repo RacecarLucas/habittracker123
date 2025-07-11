@@ -6,16 +6,14 @@ import * as LucideIcons from 'lucide-react';
 
 interface ShopProps {
   userStats: UserStats;
-  setUserStats: (stats: UserStats) => void;
+  onPurchaseItem: (itemId: string, price: number) => void;
   purchasedItems: string[];
-  setPurchasedItems: (items: string[]) => void;
 }
 
 const Shop: React.FC<ShopProps> = ({ 
   userStats, 
-  setUserStats, 
+  onPurchaseItem,
   purchasedItems, 
-  setPurchasedItems 
 }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showConfirm, setShowConfirm] = useState<string | null>(null);
@@ -34,11 +32,7 @@ const Shop: React.FC<ShopProps> = ({
 
   const handlePurchase = (item: ShopItem) => {
     if (userStats.totalCoins >= item.price && !purchasedItems.includes(item.id)) {
-      setUserStats({
-        ...userStats,
-        totalCoins: userStats.totalCoins - item.price
-      });
-      setPurchasedItems([...purchasedItems, item.id]);
+      onPurchaseItem(item.id, item.price);
       setShowConfirm(null);
     }
   };

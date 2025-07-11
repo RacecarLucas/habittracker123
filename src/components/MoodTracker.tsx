@@ -5,10 +5,11 @@ import { Calendar, Smile, Frown, Meh, Heart, TrendingUp } from 'lucide-react';
 
 interface MoodTrackerProps {
   moodEntries: MoodEntry[];
-  setMoodEntries: (entries: MoodEntry[]) => void;
+  onSaveMoodEntry: (entry: MoodEntry) => void;
 }
 
 const MoodTracker: React.FC<MoodTrackerProps> = ({ moodEntries, setMoodEntries }) => {
+const MoodTracker: React.FC<MoodTrackerProps> = ({ moodEntries, onSaveMoodEntry }) => {
   const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
   const [selectedMood, setSelectedMood] = useState<1 | 2 | 3 | 4 | 5 | null>(null);
   const [note, setNote] = useState('');
@@ -32,8 +33,7 @@ const MoodTracker: React.FC<MoodTrackerProps> = ({ moodEntries, setMoodEntries }
         note: note.trim() || undefined
       };
       
-      const updatedEntries = moodEntries.filter(entry => entry.date !== selectedDate);
-      setMoodEntries([...updatedEntries, newEntry]);
+      onSaveMoodEntry(newEntry);
       setSelectedMood(null);
       setNote('');
     }
