@@ -32,6 +32,44 @@ function App() {
 
   const [currentTab, setCurrentTab] = useState('dashboard');
 
+  // Update current streak based on habit completions
+  useEffect(() => {
+    if (!user?.id || dataLoading || habits.length === 0) return;
+    
+    const today = formatDate(new Date());
+    const yesterday = formatDate(new Date(Date.now() - 24 * 60 * 60 * 1000));
+    
+    const todayCompletions = habits.filter(habit => 
+      habit.completedDates.includes(today)
+    ).length;
+    
+    const yesterdayCompletions = habits.filter(habit => 
+      habit.completedDates.includes(yesterday)
+    ).length;
+    
+    // Calculate streak based on consecutive days of completing at least one habit
+    let currentStreak = 0;
+    let checkDate = new Date();
+    
+    while (true) {
+      const dateString = formatDate(checkDate);
+      const dayCompletions = habits.filter(habit => 
+        habit.completedDates.includes(dateString)
+      ).length;
+      
+      if (dayCompletions > 0) {
+        currentStreak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+    
+    updateUserStats({
+      currentStreak
+    });
+  }, [user?.id, habits, updateUserStats, dataLoading]);
+
   // Debug logging
   useEffect(() => {
     console.log('App state:', {
@@ -84,42 +122,6 @@ function App() {
       </div>
     );
   }
-
-  // Update current streak based on habit completions
-  useEffect(() => {
-    const today = formatDate(new Date());
-    const yesterday = formatDate(new Date(Date.now() - 24 * 60 * 60 * 1000));
-    
-    const todayCompletions = habits.filter(habit => 
-      habit.completedDates.includes(today)
-    ).length;
-    
-    const yesterdayCompletions = habits.filter(habit => 
-      habit.completedDates.includes(yesterday)
-    ).length;
-    
-    // Calculate streak based on consecutive days of completing at least one habit
-    let currentStreak = 0;
-    let checkDate = new Date();
-    
-    while (true) {
-      const dateString = formatDate(checkDate);
-      const dayCompletions = habits.filter(habit => 
-        habit.completedDates.includes(dateString)
-      ).length;
-      
-      if (dayCompletions > 0) {
-        currentStreak++;
-        checkDate.setDate(checkDate.getDate() - 1);
-      } else {
-        break;
-      }
-    }
-    
-    updateUserStats({
-      currentStreak
-    });
-  }, [habits, updateUserStats]);
 
   const renderCurrentTab = () => {
     if (dataLoading) {
