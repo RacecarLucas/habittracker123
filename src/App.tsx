@@ -7,7 +7,7 @@ import Navigation from './components/Navigation';
 import Dashboard from './components/Dashboard';
 import HabitsManager from './components/HabitsManager';
 import Shop from './components/Shop';
-import MoodTracker from './components/MoodTracker';
+import { MoodTracker } from './components/MoodTracker';
 import ExportData from './components/ExportData';
 import Profile from './components/Profile';
 

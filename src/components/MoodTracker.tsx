@@ -8,7 +8,7 @@ interface MoodTrackerProps {
   onSaveMoodEntry: (entry: MoodEntry) => void;
 }
 
-const MoodTracker: React.FC<MoodTrackerProps> = ({ moodEntries, onSaveMoodEntry }) => {
+export const MoodTracker: React.FC<MoodTrackerProps> = ({ moodEntries, onSaveMoodEntry }) => {
   const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
   const [selectedMood, setSelectedMood] = useState<1 | 2 | 3 | 4 | 5 | null>(null);
   const [note, setNote] = useState('');
@@ -204,5 +204,3 @@ const MoodTracker: React.FC<MoodTrackerProps> = ({ moodEntries, onSaveMoodEntry 
     </div>
   );
 };
-
-export default MoodTracker;
