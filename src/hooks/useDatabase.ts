@@ -145,9 +145,9 @@ export function useDatabase(userId: string | undefined) {
       .from('user_stats')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code !== 'PGRST116') {
+    if (error) {
       console.error('Error loading user stats:', error);
       return;
     }
