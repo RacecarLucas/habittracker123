@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { User, Mail, Lock, UserPlus, LogIn } from 'lucide-react';
+import { User, Mail, Lock, UserPlus, LogIn, Chrome } from 'lucide-react';
 
 const Auth: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -10,7 +10,7 @@ const Auth: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const { signUp, signIn } = useAuth();
+  const { signUp, signIn, signInWithGoogle } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +35,19 @@ const Auth: React.FC = () => {
     } catch (err: any) {
       setError(err.message);
     } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const { error } = await signInWithGoogle();
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message);
       setLoading(false);
     }
   };
@@ -130,6 +143,26 @@ const Auth: React.FC = () => {
             )}
           </button>
         </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+            </div>
+          </div>
+
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+            className="mt-4 w-full bg-white border border-gray-300 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+          >
+            <Chrome size={20} className="text-blue-500" />
+            <span>Sign in with Google</span>
+          </button>
+        </div>
 
         <div className="mt-6 text-center">
           <button

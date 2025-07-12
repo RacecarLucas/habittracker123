@@ -63,11 +63,21 @@ export function useAuth() {
     return await supabase.auth.signOut();
   };
 
+  const signInWithGoogle = async () => {
+    return await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin
+      }
+    });
+  };
+
   return {
     user,
     loading,
     signUp,
     signIn,
-    signOut
+    signOut,
+    signInWithGoogle
   };
 }
