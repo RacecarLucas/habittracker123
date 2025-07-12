@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
 import { UserStats, Habit } from '../types';
-import { User, Award, Target, Flame, Calendar, Settings, Trash2 } from 'lucide-react';
+import { User, Award, Target, Flame, Calendar, Settings, Trash2, LogOut } from 'lucide-react';
 
 interface ProfileProps {
   userStats: UserStats;
@@ -13,6 +14,7 @@ const Profile: React.FC<ProfileProps> = ({
   habits, 
   onResetData
 }) => {
+  const { signOut } = useAuth();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [userName, setUserName] = useState(localStorage.getItem('userName') || 'User');
   const [isEditingName, setIsEditingName] = useState(false);
@@ -25,6 +27,14 @@ const Profile: React.FC<ProfileProps> = ({
   const handleResetData = () => {
     onResetData();
     setShowResetConfirm(false);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const getAchievements = () => {
@@ -207,6 +217,18 @@ const Profile: React.FC<ProfileProps> = ({
             </span>
           </div>
         </div>
+      </div>
+
+      {/* Account Actions */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4">Account</h2>
+        <button
+          onClick={handleSignOut}
+          className="w-full flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+        >
+          <LogOut size={16} />
+          <span>Sign Out</span>
+        </button>
       </div>
 
       {/* Danger Zone */}
