@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { UserStats, Habit } from '../types';
-import { User, Award, Target, Flame, Calendar, Settings, Trash2, LogOut } from 'lucide-react';
+import { User, Award, Target, Flame, Calendar, Settings, Trash2, LogOut, Lock } from 'lucide-react';
 
 interface ProfileProps {
   userStats: UserStats;
@@ -14,8 +14,15 @@ const Profile: React.FC<ProfileProps> = ({
   habits, 
   onResetData
 }) => {
-  const { signOut } = useAuth();
+  const { signOut, updatePassword, user } = useAuth();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
   const [userName, setUserName] = useState(localStorage.getItem('userName') || 'User');
   const [isEditingName, setIsEditingName] = useState(false);
 
@@ -36,6 +43,39 @@ const Profile: React.FC<ProfileProps> = ({
       console.error('Error signing out:', error);
     }
   };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError('');
+    setPasswordSuccess(false);
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return;
+    }
+
+    if (passwordData.newPassword.length < 6) {
+      setPasswordError('Password must be at least 6 characters long');
+      return;
+    }
+
+    try {
+      const { error } = await updatePassword(passwordData.newPassword);
+      if (error) throw error;
+      
+      setPasswordSuccess(true);
+      setPasswordData({ newPassword: '', confirmPassword: '' });
+      setTimeout(() => {
+        setShowPasswordForm(false);
+        setPasswordSuccess(false);
+      }, 2000);
+    } catch (error: any) {
+      setPasswordError(error.message);
+    }
+  };
+
+  // Check if user signed up with email/password (not OAuth)
+  const canChangePassword = user?.app_metadata?.provider === 'email';
 
   const getAchievements = () => {
     const achievements = [];
@@ -222,13 +262,24 @@ const Profile: React.FC<ProfileProps> = ({
       {/* Account Actions */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
         <h2 className="text-xl font-semibold mb-4">Account</h2>
-        <button
-          onClick={handleSignOut}
-          className="w-full flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
-        >
-          <LogOut size={16} />
-          <span>Sign Out</span>
-        </button>
+        <div className="space-y-3">
+          {canChangePassword && (
+            <button
+              onClick={() => setShowPasswordForm(true)}
+              className="w-full flex items-center justify-center space-x-2 bg-blue-100 text-blue-700 px-4 py-3 rounded-lg font-medium hover:bg-blue-200 transition-colors"
+            >
+              <Lock size={16} />
+              <span>Change Password</span>
+            </button>
+          )}
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+          >
+            <LogOut size={16} />
+            <span>Sign Out</span>
+          </button>
+        </div>
       </div>
 
       {/* Danger Zone */}
@@ -268,6 +319,77 @@ const Profile: React.FC<ProfileProps> = ({
                 Cancel
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Password Change Form */}
+      {showPasswordForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4">Change Password</h2>
+            <form onSubmit={handlePasswordChange} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  value={passwordData.newPassword}
+                  onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                  minLength={6}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  value={passwordData.confirmPassword}
+                  onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                  minLength={6}
+                />
+              </div>
+              
+              {passwordError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-600 text-sm">{passwordError}</p>
+                </div>
+              )}
+              
+              {passwordSuccess && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <p className="text-green-600 text-sm">Password updated successfully!</p>
+                </div>
+              )}
+              
+              <div className="flex space-x-3">
+                <button
+                  type="submit"
+                  className="flex-1 bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors"
+                >
+                  Update Password
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPasswordForm(false);
+                    setPasswordData({ newPassword: '', confirmPassword: '' });
+                    setPasswordError('');
+                    setPasswordSuccess(false);
+                  }}
+                  className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
