@@ -11,6 +11,12 @@ export function useAuth() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setLoading(false);
+    }).catch((error) => {
+      if (error.message && error.message.includes('Invalid Refresh Token')) {
+        supabase.auth.signOut();
+        setUser(null);
+      }
+      setLoading(false);
     });
 
     // Listen for auth changes
