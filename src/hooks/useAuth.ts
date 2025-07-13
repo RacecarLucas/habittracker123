@@ -78,12 +78,18 @@ export function useAuth() {
     });
   };
 
+  const updatePassword = async (newPassword: string) => {
+    return await supabase.auth.updateUser({
+      password: newPassword
+    });
+  };
   return {
     user,
     loading,
     signUp,
     signIn,
     signOut,
-    signInWithGoogle
+    signInWithGoogle,
+    updatePassword
   };
 }
