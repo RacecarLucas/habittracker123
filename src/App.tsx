@@ -10,6 +10,7 @@ import Shop from './components/Shop';
 import { MoodTracker } from './components/MoodTracker';
 import ExportData from './components/ExportData';
 import Profile from './components/Profile';
+import BugReport from './components/BugReport';
 
 function App() {
   const { user, loading: authLoading } = useAuth();
@@ -181,6 +182,8 @@ function App() {
             onResetData={refreshData}
           />
         );
+      case 'report':
+        return <BugReport />;
       default:
         return <Dashboard habits={habits} userStats={userStats} />;
     }
