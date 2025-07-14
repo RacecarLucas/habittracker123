@@ -41,39 +41,43 @@ ${message}
 This bug report was automatically sent from the Habit Tracker application.
     `.trim();
 
-    // Send email using a simple email service
-    // Note: In a real implementation, you'd use a service like SendGrid, Resend, or similar
-    // For now, we'll simulate sending and log the report
-    console.log('Bug Report:', {
-      to: 'lucas.ly.chen@gmail.com',
-      from: userEmail,
-      subject: `Bug Report: ${subject}`,
-      content: emailContent
-    });
+    // Send email using Resend
+    const resendApiKey = Deno.env.get('RESEND_API_KEY');
+    
+    if (!resendApiKey) {
+      console.error('RESEND_API_KEY not found in environment variables');
+      throw new Error('Email service not configured');
+    }
 
-    // In a production environment, you would integrate with an email service here
-    // Example with Resend:
-    /*
-    const response = await fetch('https://api.resend.com/emails', {
+    const emailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('RESEND_API_KEY')}`,
+        'Authorization': `Bearer ${resendApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'noreply@yourdomain.com',
+        from: 'Bug Reports <noreply@resend.dev>', // Use resend.dev for testing, or your domain
         to: 'lucas.ly.chen@gmail.com',
-        subject: `Bug Report: ${subject}`,
+        subject: `Habit Tracker: ${subject}`,
         text: emailContent,
         reply_to: userEmail
       }),
     });
-    */
+
+    if (!emailResponse.ok) {
+      const errorData = await emailResponse.text();
+      console.error('Resend API error:', errorData);
+      throw new Error('Failed to send email');
+    }
+
+    const emailResult = await emailResponse.json();
+    console.log('Email sent successfully:', emailResult);
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: 'Bug report sent successfully' 
+        message: 'Bug report sent successfully',
+        emailId: emailResult.id
       }),
       {
         headers: {
@@ -88,7 +92,7 @@ This bug report was automatically sent from the Habit Tracker application.
     return new Response(
       JSON.stringify({ 
         success: false, 
-        message: 'Failed to send bug report' 
+        message: 'Failed to send bug report: ' + error.message
       }),
       {
         status: 500,
