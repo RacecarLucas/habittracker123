@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { Bug, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Bug, Send, CheckCircle, AlertCircle, Heart, Sparkles } from 'lucide-react';
 
 const BugReport: React.FC = () => {
   const { user } = useAuth();
@@ -61,29 +61,37 @@ const BugReport: React.FC = () => {
   };
 
   return (
-    <div className="p-6 pb-24 max-w-md mx-auto">
+    <div className="p-6 pb-24 max-w-md mx-auto font-sans">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <div className="flex items-center space-x-2">
+          <Bug className="h-8 w-8 text-cute-pink-500" />
+          <h1 className="text-4xl font-display font-bold bg-gradient-to-r from-cute-pink-600 to-cute-purple-600 bg-clip-text text-transparent">
+            Report Issue
+          </h1>
+        </div>
           Report Issue
         </h1>
-        <Bug className="text-purple-600" size={28} />
+        <Sparkles className="text-cute-purple-500" size={28} />
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Help us improve the app</h2>
-        <p className="text-gray-600 text-sm mb-4">
+      <div className="bg-white rounded-super-cute shadow-cute border-2 border-cute-pink-100 p-6 mb-6">
+        <div className="flex items-center space-x-2 mb-4">
+          <Heart className="h-6 w-6 text-cute-pink-500" />
+          <h2 className="text-xl font-display font-bold text-cute-purple-800">Help us improve the app</h2>
+        </div>
+        <p className="text-cute-purple-600 text-sm mb-4 font-medium">
           Found a bug or have a suggestion? Let us know! Your feedback helps make the app better for everyone.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-cute-purple-700 mb-2">
               Category
             </label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-3 border-2 border-cute-pink-200 rounded-cute focus:outline-none focus:ring-2 focus:ring-cute-pink-400 focus:border-transparent transition-all duration-200"
               required
             >
               {categories.map((category) => (
@@ -95,27 +103,27 @@ const BugReport: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-cute-purple-700 mb-2">
               Subject
             </label>
             <input
               type="text"
               value={formData.subject}
               onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-3 border-2 border-cute-pink-200 rounded-cute focus:outline-none focus:ring-2 focus:ring-cute-pink-400 focus:border-transparent transition-all duration-200"
               placeholder="Brief description of the issue"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-cute-purple-700 mb-2">
               Description
             </label>
             <textarea
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-3 border-2 border-cute-pink-200 rounded-cute focus:outline-none focus:ring-2 focus:ring-cute-pink-400 focus:border-transparent transition-all duration-200"
               rows={6}
               placeholder="Please describe the issue in detail. Include steps to reproduce if it's a bug."
               required
@@ -123,18 +131,18 @@ const BugReport: React.FC = () => {
           </div>
 
           {submitStatus === 'success' && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center space-x-2">
-              <CheckCircle className="text-green-600" size={20} />
-              <p className="text-green-700 text-sm">
+            <div className="bg-cute-green-50 border-2 border-cute-green-200 rounded-cute p-4 flex items-center space-x-2">
+              <CheckCircle className="text-cute-green-600" size={20} />
+              <p className="text-cute-green-700 text-sm font-medium">
                 Thank you! Your report has been sent successfully.
               </p>
             </div>
           )}
 
           {submitStatus === 'error' && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center space-x-2">
+            <div className="bg-red-50 border-2 border-red-200 rounded-cute p-4 flex items-center space-x-2">
               <AlertCircle className="text-red-600" size={20} />
-              <p className="text-red-700 text-sm">
+              <p className="text-red-700 text-sm font-medium">
                 Failed to send report. Please try again later.
               </p>
             </div>
@@ -143,13 +151,13 @@ const BugReport: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-3 rounded-lg font-medium hover:from-purple-600 hover:to-purple-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            className="w-full bg-gradient-to-r from-cute-pink-500 to-cute-purple-500 text-white py-4 rounded-cute font-semibold hover:from-cute-pink-600 hover:to-cute-purple-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 shadow-cute"
           >
             {isSubmitting ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
-                <Send size={20} />
+                <Send size={22} />
                 <span>Send Report</span>
               </>
             )}
@@ -157,16 +165,16 @@ const BugReport: React.FC = () => {
         </form>
       </div>
 
-      <div className="bg-gray-50 rounded-xl p-6">
-        <h3 className="font-semibold text-gray-800 mb-2">What information is sent?</h3>
-        <div className="space-y-2 text-sm text-gray-600">
+      <div className="bg-cute-pink-50 rounded-super-cute p-6 border-2 border-cute-pink-100">
+        <h3 className="font-display font-bold text-cute-purple-800 mb-3">What information is sent?</h3>
+        <div className="space-y-2 text-sm text-cute-purple-600 font-medium">
           <p>• Your email address (for follow-up)</p>
           <p>• The message you write</p>
           <p>• Current page URL</p>
           <p>• Browser information (for debugging)</p>
           <p>• Timestamp</p>
         </div>
-        <p className="text-xs text-gray-500 mt-4">
+        <p className="text-xs text-cute-purple-500 mt-4 font-medium">
           Your privacy is important to us. This information is only used to investigate and resolve the issue you report.
         </p>
       </div>

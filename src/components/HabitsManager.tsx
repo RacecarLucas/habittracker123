@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Habit } from '../types';
 import { formatDate, isToday } from '../utils/dateUtils';
-import { Plus, Edit2, Trash2, CheckCircle, Circle, Flame, Target, Calendar } from 'lucide-react';
+import { Plus, Edit2, Trash2, CheckCircle, Circle, Flame, Target, Calendar, Sparkles, Heart } from 'lucide-react';
 
 interface HabitsManagerProps {
   habits: Habit[];
@@ -91,16 +91,21 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
   };
 
   return (
-    <div className="p-6 pb-24 max-w-md mx-auto">
+    <div className="p-6 pb-24 max-w-md mx-auto font-sans">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <div className="flex items-center space-x-2">
+          <Sparkles className="h-8 w-8 text-cute-pink-500" />
+          <h1 className="text-4xl font-display font-bold bg-gradient-to-r from-cute-pink-600 to-cute-purple-600 bg-clip-text text-transparent">
+            My Habits
+          </h1>
+        </div>
           My Habits
         </h1>
         <button
           onClick={() => setShowAddForm(true)}
-          className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2 rounded-xl font-medium hover:from-purple-600 hover:to-purple-700 transition-all duration-200 flex items-center space-x-2"
+          className="bg-gradient-to-r from-cute-pink-500 to-cute-purple-500 text-white px-5 py-3 rounded-super-cute font-semibold hover:from-cute-pink-600 hover:to-cute-purple-600 transition-all duration-200 flex items-center space-x-2 shadow-cute"
         >
-          <Plus size={20} />
+          <Plus size={22} />
           <span>Add</span>
         </button>
       </div>
@@ -108,44 +113,44 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
       {/* Add/Edit Form */}
       {showAddForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">
+          <div className="bg-white rounded-super-cute p-8 w-full max-w-md shadow-cute-lg">
+            <h2 className="text-2xl font-display font-bold text-cute-purple-800 mb-6">
               {editingHabit ? 'Edit Habit' : 'Add New Habit'}
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-cute-purple-700 mb-2">
                   Habit Name
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 border-2 border-cute-pink-200 rounded-cute focus:outline-none focus:ring-2 focus:ring-cute-pink-400 focus:border-transparent transition-all duration-200"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-cute-purple-700 mb-2">
                   Description
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 border-2 border-cute-pink-200 rounded-cute focus:outline-none focus:ring-2 focus:ring-cute-pink-400 focus:border-transparent transition-all duration-200"
                   rows={3}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-cute-purple-700 mb-2">
                   Priority
                 </label>
                 <select
                   value={formData.priority}
                   onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'low' | 'medium' | 'high' })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 border-2 border-cute-pink-200 rounded-cute focus:outline-none focus:ring-2 focus:ring-cute-pink-400 focus:border-transparent transition-all duration-200"
                 >
                   <option value="low">Low (10 coins)</option>
                   <option value="medium">Medium (20 coins)</option>
@@ -156,7 +161,7 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
               <div className="flex space-x-3">
                 <button
                   type="submit"
-                  className="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 text-white py-2 rounded-lg font-medium hover:from-purple-600 hover:to-purple-700 transition-all duration-200"
+                  className="flex-1 bg-gradient-to-r from-cute-pink-500 to-cute-purple-500 text-white py-3 rounded-cute font-semibold hover:from-cute-pink-600 hover:to-cute-purple-600 transition-all duration-200 shadow-cute"
                 >
                   {editingHabit ? 'Update' : 'Add'} Habit
                 </button>
@@ -167,7 +172,7 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
                     setEditingHabit(null);
                     setFormData({ name: '', description: '', priority: 'medium' });
                   }}
-                  className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-300 transition-all duration-200"
+                  className="flex-1 bg-cute-pink-100 text-cute-purple-700 py-3 rounded-cute font-semibold hover:bg-cute-pink-200 transition-all duration-200"
                 >
                   Cancel
                 </button>
@@ -185,30 +190,30 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
           return (
             <div
               key={habit.id}
-              className={`bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-200 ${
-                isCompleted ? 'ring-2 ring-green-200 bg-green-50' : 'hover:shadow-md'
+              className={`bg-white rounded-super-cute shadow-cute border-2 border-cute-pink-100 p-6 transition-all duration-300 ${
+                isCompleted ? 'ring-2 ring-cute-green-300 bg-cute-green-50' : 'hover:shadow-cute-lg'
               }`}
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <button
                     onClick={() => toggleHabitCompletion(habit.id)}
-                    className={`p-1 rounded-full transition-all duration-200 ${
+                    className={`p-2 rounded-full transition-all duration-200 ${
                       isCompleted 
-                        ? 'text-green-600 hover:text-green-700' 
-                        : 'text-gray-400 hover:text-gray-600'
+                        ? 'text-cute-green-600 hover:text-cute-green-700 bg-cute-green-100' 
+                        : 'text-gray-400 hover:text-cute-pink-500 hover:bg-cute-pink-50'
                     }`}
                   >
-                    {isCompleted ? <CheckCircle size={24} /> : <Circle size={24} />}
+                    {isCompleted ? <CheckCircle size={26} /> : <Circle size={26} />}
                   </button>
                   <div>
                     <h3 className={`font-semibold ${
-                      isCompleted ? 'text-green-800' : 'text-gray-800'
+                      isCompleted ? 'text-cute-green-800' : 'text-cute-purple-800'
                     }`}>
                       {habit.name}
                     </h3>
                     {habit.description && (
-                      <p className="text-sm text-gray-600 mt-1">{habit.description}</p>
+                      <p className="text-sm text-cute-purple-600 mt-1">{habit.description}</p>
                     )}
                   </div>
                 </div>
@@ -216,15 +221,15 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => handleEdit(habit)}
-                    className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200"
+                    className="p-2 text-gray-500 hover:text-cute-purple-600 hover:bg-cute-purple-100 rounded-cute transition-all duration-200"
                   >
-                    <Edit2 size={16} />
+                    <Edit2 size={18} />
                   </button>
                   <button
                     onClick={() => handleDelete(habit.id)}
-                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
+                    className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-cute transition-all duration-200"
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={18} />
                   </button>
                 </div>
               </div>
@@ -233,25 +238,25 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <div className={`w-3 h-3 rounded-full ${getPriorityColor(habit.priority)}`} />
-                    <span className={`text-sm font-medium ${getPriorityTextColor(habit.priority)}`}>
+                    <span className={`text-sm font-semibold ${getPriorityTextColor(habit.priority)}`}>
                       {habit.priority.charAt(0).toUpperCase() + habit.priority.slice(1)}
                     </span>
                   </div>
                   
                   <div className="flex items-center space-x-1">
-                    <Flame size={16} className="text-orange-500" />
-                    <span className="text-sm text-gray-600">{habit.streak}</span>
+                    <Flame size={18} className="text-orange-400" />
+                    <span className="text-sm text-cute-purple-600 font-semibold">{habit.streak}</span>
                   </div>
                   
                   <div className="flex items-center space-x-1">
-                    <Target size={16} className="text-blue-500" />
-                    <span className="text-sm text-gray-600">{habit.longestStreak}</span>
+                    <Target size={18} className="text-cute-blue-500" />
+                    <span className="text-sm text-cute-purple-600 font-semibold">{habit.longestStreak}</span>
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-1">
-                  <Calendar size={16} className="text-purple-500" />
-                  <span className="text-sm text-gray-600">{habit.completedDates.length}</span>
+                  <Calendar size={18} className="text-cute-pink-500" />
+                  <span className="text-sm text-cute-purple-600 font-semibold">{habit.completedDates.length}</span>
                 </div>
               </div>
             </div>
@@ -261,12 +266,12 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
 
       {habits.length === 0 && (
         <div className="text-center py-12">
-          <Target className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-500 mb-2">No habits yet</h3>
-          <p className="text-gray-400 mb-6">Start building better habits today!</p>
+          <Heart className="h-20 w-20 text-cute-pink-300 mx-auto mb-4" />
+          <h3 className="text-xl font-display font-bold text-cute-purple-600 mb-2">No habits yet</h3>
+          <p className="text-cute-purple-500 mb-6">Start building cute habits today! ✨</p>
           <button
             onClick={() => setShowAddForm(true)}
-            className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-600 hover:to-purple-700 transition-all duration-200"
+            className="bg-gradient-to-r from-cute-pink-500 to-cute-purple-500 text-white px-8 py-4 rounded-super-cute font-semibold hover:from-cute-pink-600 hover:to-cute-purple-600 transition-all duration-200 shadow-cute"
           >
             Add Your First Habit
           </button>

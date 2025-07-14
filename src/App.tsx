@@ -190,7 +190,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-cute-pink-50 via-cute-purple-50 to-cute-blue-50 font-sans">
       {renderCurrentTab()}
       <Navigation currentTab={currentTab} setCurrentTab={setCurrentTab} />
     </div>
