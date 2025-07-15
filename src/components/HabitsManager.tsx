@@ -99,8 +99,6 @@ const HabitsManager: React.FC<HabitsManagerProps> = ({
             My Habits
           </h1>
         </div>
-          My Habits
-        </h1>
         <button
           onClick={() => setShowAddForm(true)}
           className="bg-gradient-to-r from-cute-pink-500 to-cute-purple-500 text-white px-5 py-3 rounded-super-cute font-semibold hover:from-cute-pink-600 hover:to-cute-purple-600 transition-all duration-200 flex items-center space-x-2 shadow-cute"

@@ -31,8 +31,6 @@ const Dashboard: React.FC<DashboardProps> = ({ habits, userStats }) => {
           </h1>
           <Heart className="h-6 w-6 text-cute-pink-400" />
         </div>
-          Welcome Back!
-        </h1>
         <p className="text-cute-purple-600 font-medium">Let's check your cute progress today ✨</p>
       </div>
 

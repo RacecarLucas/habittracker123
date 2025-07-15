@@ -69,8 +69,6 @@ const BugReport: React.FC = () => {
             Report Issue
           </h1>
         </div>
-          Report Issue
-        </h1>
         <Sparkles className="text-cute-purple-500" size={28} />
       </div>
 
