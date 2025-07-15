@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Target, ShoppingBag, Heart, Download, User, Bug, Sparkles } from 'lucide-react';
+import { Home, Target, ShoppingBag, Heart, Download, User, Bug, Sparkles, Calendar as CalendarIcon } from 'lucide-react';
 
 interface NavigationProps {
   currentTab: string;
@@ -10,6 +10,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentTab, setCurrentTab }) =>
   const tabs = [
     { id: 'dashboard', label: 'Home', icon: Home },
     { id: 'habits', label: 'Habits', icon: Sparkles },
+    { id: 'calendar', label: 'Calendar', icon: CalendarIcon },
     { id: 'shop', label: 'Shop', icon: ShoppingBag },
     { id: 'mood', label: 'Mood', icon: Heart },
     { id: 'export', label: 'Export', icon: Download },

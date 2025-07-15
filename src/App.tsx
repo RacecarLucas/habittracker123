@@ -11,6 +11,7 @@ import { MoodTracker } from './components/MoodTracker';
 import ExportData from './components/ExportData';
 import Profile from './components/Profile';
 import BugReport from './components/BugReport';
+import Calendar from './components/Calendar';
 
 function App() {
   const { user, loading: authLoading } = useAuth();
@@ -149,6 +150,13 @@ function App() {
             onToggleCompletion={toggleHabitCompletion}
             userStats={userStats} 
             onUpdateStats={updateUserStats}
+          />
+        );
+      case 'calendar':
+        return (
+          <Calendar 
+            habits={habits} 
+            moodEntries={moodEntries}
           />
         );
       case 'shop':
