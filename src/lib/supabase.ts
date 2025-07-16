@@ -5,8 +5,9 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 // Debug logging
 console.log('Supabase config:', {
-  url: supabaseUrl ? 'Set' : 'Missing',
-  key: supabaseAnonKey ? 'Set' : 'Missing'
+  url: supabaseUrl ? 'Connected' : 'Missing',
+  key: supabaseAnonKey ? 'Connected' : 'Missing',
+  fullUrl: supabaseUrl
 });
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);

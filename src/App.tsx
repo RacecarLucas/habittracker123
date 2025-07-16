@@ -76,9 +76,11 @@ function App() {
   useEffect(() => {
     console.log('App state:', {
       user: user?.id,
+      userEmail: user?.email,
       authLoading,
       dataLoading,
       habitsCount: habits.length,
+      userStatsCoins: userStats.totalCoins,
       supabaseUrl: import.meta.env.VITE_SUPABASE_URL ? 'Set' : 'Missing',
       supabaseKey: import.meta.env.VITE_SUPABASE_ANON_KEY ? 'Set' : 'Missing'
     });

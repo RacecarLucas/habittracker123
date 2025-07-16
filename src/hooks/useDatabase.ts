@@ -38,6 +38,7 @@ export function useDatabase(userId: string | undefined) {
   const loadAllData = async () => {
     if (!userId) return;
 
+    console.log('Loading data for user:', userId);
     setLoading(true);
     setError(null);
     try {
@@ -47,6 +48,7 @@ export function useDatabase(userId: string | undefined) {
         loadMoodEntries(),
         loadPurchasedItems()
       ]);
+      console.log('Data loaded successfully');
     } catch (error) {
       console.error('Error loading data:', error);
       setError(error instanceof Error ? error.message : 'Failed to load data');

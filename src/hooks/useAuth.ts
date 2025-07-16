@@ -9,9 +9,11 @@ export function useAuth() {
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session?.user?.id ? 'User logged in' : 'No user');
       setUser(session?.user ?? null);
       setLoading(false);
     }).catch((error) => {
+      console.error('Session error:', error);
       if (error.message && error.message.includes('Invalid Refresh Token')) {
         supabase.auth.signOut();
         setUser(null);
@@ -22,6 +24,7 @@ export function useAuth() {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session?.user?.id ? 'User logged in' : 'No user');
         setUser(session?.user ?? null);
         setLoading(false);
       }
