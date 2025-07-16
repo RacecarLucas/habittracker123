@@ -111,15 +111,22 @@ function App() {
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-red-600 text-2xl">⚠️</span>
           </div>
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Configuration Error</h1>
+          <h1 className="text-2xl font-bold text-purple-600 mb-4">Database Setup Required</h1>
           <p className="text-gray-600 mb-4">
-            Supabase environment variables are missing. Please set up your database connection.
+            Please connect to Supabase to enable all features like saving habits, moods, and progress.
           </p>
+          <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-4 rounded-lg mb-4">
+            <p className="font-semibold mb-2">🚀 Click "Connect to Supabase" in the top right!</p>
+            <p className="text-sm opacity-90">This will set up your personal database automatically.</p>
+          </div>
           <div className="text-left bg-gray-50 p-4 rounded-lg text-sm">
-            <p className="font-medium mb-2">Required environment variables:</p>
+            <p className="font-medium mb-2">What you'll get after connecting:</p>
             <ul className="space-y-1 text-gray-600">
-              <li>• VITE_SUPABASE_URL</li>
-              <li>• VITE_SUPABASE_ANON_KEY</li>
+              <li>✅ Save and track your habits</li>
+              <li>✅ Record daily moods</li>
+              <li>✅ Earn coins and level up</li>
+              <li>✅ Shop for rewards</li>
+              <li>✅ View progress calendar</li>
             </ul>
           </div>
         </div>
